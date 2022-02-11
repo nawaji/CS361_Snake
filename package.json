@@ -1,0 +1,26 @@
+{
+  "name": "cs361_snake",
+  "version": "1.0.0",
+  "description": "CS361 microservices project - html snake game",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nawaji/CS361_Snake.git"
+  },
+  "author": "tojo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nawaji/CS361_Snake/issues"
+  },
+  "homepage": "https://github.com/nawaji/CS361_Snake#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "express-handlebars": "^6.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
