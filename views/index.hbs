@@ -4,7 +4,7 @@
 		<div class="item-text">
 			<p>Arrow keys to move</p>
 			<p>Collect apples for points</p>
-			<p>Avoid borders</p>
+			<p>Avoid the edges of the game space</p>
 		</div>
 	</div>
 
@@ -28,5 +28,27 @@
 			<li>Cam - 80</li>
 		</ol>
 	</div>
+</div>
 
+<div id="modal-background" class="hidden"></div>
+<div id="add-user-modal" class="hidden">
+	<div class="modal-dialogue">
+
+		<div class="modal-header">
+			<h2>Add ranking</h2>
+			<button type="button" class="modal-close-button"></button>
+		</div>
+
+		<div class="modal-body">
+			<div class="name-input">
+				<label for="name-input-text">Name</label>
+				<textarea id="name-input-text"></textarea>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="cancel-add-user">Cancel</button>
+			<button type="button" class="accept-add-user">Add ranking</button>
+		</div>
+
+	</div>
 </div>

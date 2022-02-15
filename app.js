@@ -25,7 +25,6 @@ router.get("/", function(req, res, next) {
 //	res.status(200).render("index", {
 //		rankings_data
 //	})
-
 });
 
 // when the user adds a listing to the ranks, this is where the
