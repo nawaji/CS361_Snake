@@ -1,3 +1,6 @@
+
+<script src="index.js" charset="utf-8" defer></script>
+
 <div class="body-container">
 	<div class="help-container item">
 		<div class="help-header"><h2>Help</h2></div>
@@ -11,9 +14,12 @@
 	<div class="game-container item">
 		<div class="game-header"><h2>Game</h2></div>
 		<div class="game">
-			<canvas width="300" height="300" 
+			<canvas width="400" height="400" 
 			style="border:1px solid  #000000" id="game-window">
 			</canvas>
+		</div>
+		<div class="game-footer">
+			<button type="button" id="game-over">[DEBUG] Force game over</button>
 		</div>
 
 	</div>
@@ -52,3 +58,26 @@
 
 	</div>
 </div>
+
+<div id="confirm-quit-modal" class="hidden">
+	<div class="modal-dialogue">
+
+		<div class="modal-header">
+			<h2>Add ranking</h2>
+			<button type="button" class="modal-close-button"></button>
+		</div>
+
+		<div class="modal-body">
+			<div class="name-input">
+				<label for="name-input-text">Are you sure you don't want to add to leaderboards?</label>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="confirm-cancel">No</button>
+			<button type="button" class="confirm-accept">Yes</button>
+		</div>
+
+	</div>
+</div>
+
+<script src="game.js" charset="utf-8" defer></script>

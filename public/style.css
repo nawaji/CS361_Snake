@@ -21,11 +21,16 @@ body {
 .item {
 	background-color: #ffffff;
 	min-width: 270px;
-	max-width: 400px;
+	max-width: 300px;
 	border: 1px solid rgb(214, 214, 214);
 	margin: 10px;
 	padding: 0px 20px 0px 20px;
 	border-radius: 7px;	
+}
+
+.game-container {
+	min-width: 420px;
+	max-width: 500px;
 }
 
 .item-text {
@@ -37,6 +42,10 @@ body {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
+}
+
+.game-footer {
+	text-align: center;
 }
 
 .help-container, .scores-container {
