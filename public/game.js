@@ -14,9 +14,15 @@ var snake = {
 	y: 0
 };
 
+var apple = {
+	x: 0,
+	y: 0
+}
+
 var snake_dir;
 var apple_eaten = false;
 
+// min inclusive, max exclusive
 function randInt(min, max) {
 	return Math.floor(Math.random() * (max - min)) + min;
 }
@@ -90,15 +96,16 @@ function mainLoop() {
 	if (elapsed > fps_interval) {
 
 		if (apple_eaten) {
-			spawnFood(randInt(0, 20), randInt(0, 20));
+			spawnFood(apple.x, apple.y);
 		}
+
 		var dx = snake.x;
 		var dy = snake.y;
 
 		then = now - (elapsed % fps_interval);
 		var since_start = now - start_time;
 		var current_fps = Math.round(1000 / (since_start / ++frame_count) * 100) / 100;
-		console.log(current_fps + " fps");
+//		console.log(current_fps + " fps");
 	}
 
 }
@@ -107,5 +114,8 @@ function js_abort() {
 	stop_code = true;
 	throw new Error("Force aborting javascript...");
 }
+
+apple.x = randInt(0, 20);
+apple.y = randInt(0, 20);
 
 frames(5);

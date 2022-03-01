@@ -2,82 +2,17 @@
 <script src="index.js" charset="utf-8" defer></script>
 
 <div class="body-container">
-	<div class="help-container item">
-		<div class="help-header"><h2>Help</h2></div>
-		<div class="item-text">
-			<p>Arrow keys to move</p>
-			<p>Collect apples for points</p>
-			<p>Avoid the edges of the game space</p>
-		</div>
-	</div>
-
-	<div class="game-container item">
-		<div class="game-header"><h2>Game</h2></div>
-		<div class="game">
-			<canvas width="400" height="400" 
-			style="border:1px solid  #000000" id="game-window">
-			</canvas>
-		</div>
-		<div class="game-footer">
-			<button type="button" id="game-over">[DEBUG] Force game over</button>
-		</div>
-
-	</div>
-
-	<div class="scores-container item">
-
-		<div class="scores-header"><h2>Rankings</h2></div>
-		<ol id="scores">
-			<li>John - 100</li>
-			<li>Bob - 94</li>
-			<li>Cesar - 91</li>
-			<li>Cam - 80</li>
-		</ol>
-	</div>
+	{{#> help}}
+		<h1>Help hbs is missing!</h1>
+	{{/help}}
+	{{#> game}}
+		<h1>Game hbs is missing!</h1>
+	{{/game}}
+	{{#> scores}}
+		<h1>Scores hbs is missing!</h1>
+	{{/scores}}
 </div>
 
-<div id="modal-background" class="hidden"></div>
-<div id="add-user-modal" class="hidden">
-	<div class="modal-dialogue">
-
-		<div class="modal-header">
-			<h2>Add ranking</h2>
-			<button type="button" class="modal-close-button"></button>
-		</div>
-
-		<div class="modal-body">
-			<div class="name-input">
-				<label for="name-input-text">Name</label>
-				<textarea id="name-input-text"></textarea>
-			</div>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="cancel-add-user">Cancel</button>
-			<button type="button" class="accept-add-user">Add ranking</button>
-		</div>
-
-	</div>
-</div>
-
-<div id="confirm-quit-modal" class="hidden">
-	<div class="modal-dialogue">
-
-		<div class="modal-header">
-			<h2>Add ranking</h2>
-			<button type="button" class="modal-close-button"></button>
-		</div>
-
-		<div class="modal-body">
-			<div class="name-input">
-				<label for="name-input-text">Are you sure you don't want to add to leaderboards?</label>
-			</div>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="confirm-cancel">No</button>
-			<button type="button" class="confirm-accept">Yes</button>
-		</div>
-
-	</div>
-</div>
-
-<script src="game.js" charset="utf-8" defer></script>
+{{#> user-modals}}
+	<h1>User modal is missing!</h1>
+{{/user-modals}}
