@@ -7,7 +7,7 @@ body {
 	margin: 0px;
 	font-family: Helvetica, sans-serif;
 	min-height: 100%;
-	background-color: rgb(231, 231, 231);
+	background-color: rgb(194, 229, 199);
 }
 
 .site-title {
@@ -31,6 +31,19 @@ body {
 .game-container {
 	min-width: 420px;
 	max-width: 500px;
+}
+
+.scores-container {
+	max-height: 350px;
+}
+
+.help-container {
+	max-height: 350px;
+}
+
+#scores {
+	max-height: 200px;
+	overflow-y: scroll;
 }
 
 .item-text {

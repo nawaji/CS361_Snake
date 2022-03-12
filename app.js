@@ -16,6 +16,7 @@ var router = express.Router();
 const { engine } = require('express-handlebars');
 var exphbs = require('express-handlebars');  //Import express-handlbars
 const { fstat } = require('fs');
+const { resourceUsage } = require('process');
 app.engine("hbs", engine({ defaultLayout: "main", extname: ".hbs" }));
 app.set("view engine", "hbs");
 
@@ -24,19 +25,20 @@ app.use(express.static("public"));
 // serve the main web page
 router.get("/", function(req, res, next) {
 
-//	sortLeaderboards();
 	res.status(200).render("index", { user_data });
 });
 
-// when the user adds a listing to the ranks, this is where the
-// teammate's service will be handled. 
-// UPDATE 2/28/22: teammate's service is handled through search-service.js
+// handle the incoming user entry for the leaderboards
 router.post("/add-user-rank", function(req, res, next) {
 	let data = req.body;
-	console.log(data);
+
+	console.log("== reqURL: " + req.url);
+	console.log("== new entry: ", data);
+
 	user_data.push(data);
 	sortLeaderboards();
-	res.status(200).send()
+	res.status(200);
+	res.send("it worked!");
 });
 
 function sortLeaderboards() {

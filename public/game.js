@@ -1,121 +1,186 @@
 var c = document.getElementById("game-window");
 var ctx = c.getContext("2d");
 
-var grid_size = 20;
-var grid_length = ctx.canvas.height / grid_size;
+// allow the canvas to be tab-able
+c.tabIndex = 1;
 
-console.log("== Game grid L/W: " + grid_length);
-console.log("== Game grid size: " + grid_size);
+// add a listener for keypress
+document.addEventListener("keydown", snake_direction);
 
 var score = 0;
+var start = 0;			// avoid incrementing score until user presses a key		
+var queue = 0;			// avoid multiple direction changes within a single step
+const move_speed = 20;	// how far the snake moves in a step
+var game_speed = 150; 	// miliseconds between steps
 
 var snake = {
-	x: 0,
-	y: 0
-};
-
-var apple = {
-	x: 0,
-	y: 0
+	body: [ {x: 200, y: 200} ],		// snake body
+	grow: 0,						// snake growth
+	dx: 0,							// horizontal movement
+	dy: 0,							// vertical movement
 }
 
-var snake_dir;
-var apple_eaten = false;
+// current apple location
+var apple = {
+	x: 100,
+	y: 100
+}
 
 // min inclusive, max exclusive
 function randInt(min, max) {
 	return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function spawnFood(x, y) {
-	ctx.fillStyle = "red";
-	ctx.fillRect(x * grid_length, y * grid_length, grid_size, grid_size); 
-
-	ctx.fillStyle = "blue";
-	ctx.fillRect(0 * grid_length, 0 * grid_length, grid_size, grid_size);
+function drawFood() {
+	ctx.fillStyle = "Red";
+	ctx.fillRect(apple.x, apple.y, 20, 20);
 }
 
-// arrow left - 37, arrow up - 38, 
-// arrow right - 39, arrow down - 40/117 
-// 0 - left, 1 - up, 2 - right, 3 - down
-function changeDir(key) {
-	if (key == 37 && snake.dir != 0) {
+function drawSnake() {
+	ctx.fillStyle = "Green";
 
-	} else if (key == 38 && snake.dir != 1) {
+	snake.body.forEach(part => {
+		ctx.fillRect(part.x, part.y, 20, 20);
+	});
+}
 
-	} else if (key == 39 && snake.dir != 2) {
-
-	} else if (key == 40 && snake.dir != 3) {
-
+function newApple() {
+	let valid = false;
+	while(valid == false) {
+		apple.x = randInt(0, 20) * 20;
+		apple.y = randInt(0, 20) * 20;		
+		snake.body.forEach(part => {
+			if (part.x != apple.x && part.y != apple.y) {
+				valid = true;
+			}
+		});
 	}
 }
 
-var fps_interval, start_time, now, then, elapsed, frame_count = 0;
+function moveSnake() {
+	var head = {x: snake.body[0].x + snake.dx, y: snake.body[0].y + snake.dy};
 
-function frames(fps) {
-	fps_interval = 1000 / fps;
+	// add one square to the front of the snake, remove the last
+	snake.body.unshift(head);
 
-	then = Date.now();
-	start_time = then;
-	console.log(start_time);
-	spawnFood(randInt(0, 20), randInt(0, 20));
-	mainLoop();
+	// if the snake has eaten an apple, grow the snake otherwise don't
+	if (snake.grow == 0) {
+		snake.body.pop();
+	} else {
+		snake.grow--;
+	}
 }
 
-var fps = 0;
-var stop_code = false;
-function mainLoop() {
-	if (stop_code) {
+function checkFail() {
+	var output = 0;
+	var curr = 0;
+	// check collision with boundaries
+	snake.body.forEach(part => {
+		if (part.x < 0 || part.x >= 400) {
+			output++;
+		} else if (part.y < 0 || part.y >= 400) {
+			output++;
+		}
+
+		// check collision with self
+		if (curr != 0) {
+			if (snake.body[0].x == part.x && snake.body[0].y == part.y) {
+				output++;
+			}
+		}
+		curr++;
+	})
+
+	return output;
+}
+
+function checkEat() {
+	if (snake.body[0].x == apple.x && snake.body[0].y == apple.y) {
+		snake.grow++;
+		score = score + 10;
+		newApple();
+	}
+}
+
+function clearCanvas() {
+	ctx.fillStyle = "White";
+	ctx.fillRect(0, 0, c.width, c.height);
+}
+
+function snake_direction(key) {
+	var key_press = key.keyCode;
+	// 37 - left, 38 - up, 39 - right, 40 - down
+
+	if (key_press > 36 && key_press < 41) {
+		start = 1;
+	}
+
+	if (queue != 0) {
 		return;
 	}
 
-	requestAnimationFrame(mainLoop);
+	if (key_press == 37 && snake.dx != move_speed) {
+		snake.dx = -move_speed;
+		snake.dy = 0;
 
-//	snake_dir = snake_next_dir;
-/*
-	switch(snake_dir) {
-		case 0:
-			dx--;
-			break;
-		case 1:
-			dy--;
-			break;
-		case 2:
-			dx++;
-			break;
-		case 3:
-			dy++;
-			break;			
+	} else if (key_press == 38 && snake.dy != move_speed) {
+		snake.dx = 0;
+		snake.dy = -move_speed;
+
+	} else if (key_press == 39 && snake.dx != -move_speed) {
+		snake.dx = move_speed;
+		snake.dy = 0;
+
+	} else if (key_press == 40 && snake.dy != -move_speed) {
+		snake.dx = 0;
+		snake.dy = move_speed;
 	}
-*/
-	now = Date.now();
-	elapsed = now - then;
-	
-	// algorithm from http://jsfiddle.net/m1erickson/CtsY3/ for locking
-	// html canvas to a certain FPS
-	if (elapsed > fps_interval) {
+	queue = 1;
+}
 
-		if (apple_eaten) {
-			spawnFood(apple.x, apple.y);
+function updateScoreHTML() {
+	var HTML_score = document.getElementById("game-score");
+	HTML_score.textContent = "Game score: " + score;
+}
+
+function resetGame() {
+	snake.body = [ {x: 200, y: 200} ];
+	snake.grow = 0;
+	snake.dx = 0;
+	snake.dy = 0;
+	score = 0;
+	start = 0;
+	queue = 0;
+	newApple();
+}
+
+function mainLoop() {
+
+	setTimeout(function onTick() {
+		moveSnake();
+		let bounds = checkFail();
+		if (bounds > 0) {
+			console.log("out of bounds!");
+			PH_score = score;
+			openUserModal();
+			return;
 		}
 
-		var dx = snake.x;
-		var dy = snake.y;
+		checkEat();
+		clearCanvas();
+		drawFood();
+		drawSnake();
+		mainLoop();
 
-		then = now - (elapsed % fps_interval);
-		var since_start = now - start_time;
-		var current_fps = Math.round(1000 / (since_start / ++frame_count) * 100) / 100;
-//		console.log(current_fps + " fps");
-	}
-
+//		if (start != 0) {
+//			score++;
+//		}
+		updateScoreHTML();
+		queue = 0;
+	}, game_speed);
 }
 
-function js_abort() {
-	stop_code = true;
-	throw new Error("Force aborting javascript...");
-}
+newApple();
+mainLoop();
 
-apple.x = randInt(0, 20);
-apple.y = randInt(0, 20);
-
-frames(5);
+/* END OF GAME CODE */
