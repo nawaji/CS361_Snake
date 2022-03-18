@@ -4,6 +4,8 @@ var fs = require("fs");
 
 var user_data = require("./leaderboards.json");
 
+var uniqueIDs = [];
+
 var app = express();
 PORT = process.env.PORT || 3001;
 
@@ -15,8 +17,8 @@ var router = express.Router();
 
 const { engine } = require('express-handlebars');
 var exphbs = require('express-handlebars');  //Import express-handlbars
-const { fstat } = require('fs');
-const { resourceUsage } = require('process');
+//const { fstat } = require('fs');
+//const { resourceUsage } = require('process');
 app.engine("hbs", engine({ defaultLayout: "main", extname: ".hbs" }));
 app.set("view engine", "hbs");
 
@@ -28,6 +30,10 @@ router.get("/", function(req, res, next) {
 	res.status(200).render("index", { user_data });
 });
 
+router.get("/redirect", function(req, res, next) {
+	res.status(304).redirect("/");
+})
+
 // handle the incoming user entry for the leaderboards
 router.post("/add-user-rank", function(req, res, next) {
 	let data = req.body;
@@ -35,7 +41,11 @@ router.post("/add-user-rank", function(req, res, next) {
 	console.log("== reqURL: " + req.url);
 	console.log("== new entry: ", data);
 
-	user_data.push(data);
+	
+	let if_new = updateLeaderboards(data.name, data.score);
+	if (if_new) {
+		user_data.push(data);
+	}
 	sortLeaderboards();
 	res.status(200);
 	res.send("it worked!");
@@ -48,6 +58,18 @@ function sortLeaderboards() {
 			console.log("Error writing user to leaderboards.", err);
 		}
 	})
+}
+
+function updateLeaderboards(new_name, new_score) {
+	for (i = 0; i < user_data.length; i++) {
+		if (user_data[i].name == new_name) {
+			if (user_data[i].score < new_score) {
+				user_data[i].score = new_score;
+			}
+			return false;
+		}
+	}
+	return true;
 }
 
 

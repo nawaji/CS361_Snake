@@ -13,6 +13,14 @@ var queue = 0;			// avoid multiple direction changes within a single step
 const move_speed = 20;	// how far the snake moves in a step
 var game_speed = 150; 	// miliseconds between steps
 
+// customization settings (colors)
+var CTMZ = {
+	background: "white",
+	border: "black",
+	snake: "green",
+	apple: "red"
+}
+
 var snake = {
 	body: [ {x: 200, y: 200} ],		// snake body
 	grow: 0,						// snake growth
@@ -32,12 +40,12 @@ function randInt(min, max) {
 }
 
 function drawFood() {
-	ctx.fillStyle = "Red";
+	ctx.fillStyle = CTMZ.apple;
 	ctx.fillRect(apple.x, apple.y, 20, 20);
 }
 
 function drawSnake() {
-	ctx.fillStyle = "Green";
+	ctx.fillStyle = CTMZ.snake;
 
 	snake.body.forEach(part => {
 		ctx.fillRect(part.x, part.y, 20, 20);
@@ -46,14 +54,24 @@ function drawSnake() {
 
 function newApple() {
 	let valid = false;
+	let body = snake.body;
 	while(valid == false) {
 		apple.x = randInt(0, 20) * 20;
 		apple.y = randInt(0, 20) * 20;		
-		snake.body.forEach(part => {
+/*		snake.body.forEach(part => {
 			if (part.x != apple.x && part.y != apple.y) {
 				valid = true;
 			}
 		});
+*/
+		for (i = 0; i < body.length; i++) {
+			if (body[i].x == apple.x && body[i].y == apple.y) {
+				valid = false;
+				break;
+			} else {
+				valid = true;
+			}
+		}
 	}
 }
 
@@ -103,8 +121,11 @@ function checkEat() {
 }
 
 function clearCanvas() {
-	ctx.fillStyle = "White";
+	ctx.fillStyle = CTMZ.background;
 	ctx.fillRect(0, 0, c.width, c.height);
+	ctx.rect(0, 0, 400, 400);
+	ctx.strokeStyle = CTMZ.border;
+	ctx.stroke();
 }
 
 function snake_direction(key) {
@@ -170,13 +191,13 @@ function mainLoop() {
 		clearCanvas();
 		drawFood();
 		drawSnake();
-		mainLoop();
 
 //		if (start != 0) {
 //			score++;
 //		}
 		updateScoreHTML();
 		queue = 0;
+		mainLoop();
 	}, game_speed);
 }
 
