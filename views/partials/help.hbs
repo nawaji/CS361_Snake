@@ -1,8 +1,29 @@
 <div class="help-container flexitem">
-	<div class="help-header"><h2>Help</h2></div>
-	<div class="item-text">
-		<p>Use Arrow keys &#9664; &#9650; &#9660; &#9654; to move</p>
-		<p>Collect apples for 10 points</p>
-		<p>Avoid the edges and yourself!</p>
+	<div class="help-header"><h2>Options</h2></div>
+	<div class="test">
+		<label for="snake-colors">Snake color: </label>
+		<select id="snake-colors">
+			<option value="green">Green (default)</option>
+			<option value="red">Red</option>
+			<option value="yellow">Yellow</option>
+			<option value="orange">Orange</option>
+			<option value="blue">Blue</option>
+			<option value="purple">Purple</option>
+		</select>
+		<input type="Submit"></input>
+		<br><br>
+		<label for="food-colors">Food color: </label>
+		<select id="food-colors">
+			<option value="red">Red (default)</option>			
+			<option value="green">Green</option>
+			<option value="yellow">Yellow</option>
+			<option value="orange">Orange</option>
+			<option value="blue">Blue</option>
+			<option value="purple">Purple</option>
+		</select>
+		<input type="Submit"></input>
+		<br><br>
+		<button type="button" id="scene-button">Dark Mode</button>
+		<button type="button" id="defaults-button">Reset to Defaults</button>
 	</div>
 </div>

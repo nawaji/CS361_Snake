@@ -1,7 +1,6 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript" src="search-service.js"></script>
-
 <div class="scores-container flexitem">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script type="text/javascript" src="search-service.js"></script>
 
 	<div class="scores-header"><h2>Rankings</h2></div>
 	<div class="search-module">
@@ -10,7 +9,7 @@
 	</div>
 	<ol id="scores">
 		{{#each user_data}}
-			<li>{{name}} : {{score}}</li>
+			<li><span class="name">{{name}}</span> : <span class="score">{{score}}</span></li>
 		{{/each}}
 	</ol>
 </div>

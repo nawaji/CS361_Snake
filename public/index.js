@@ -17,6 +17,13 @@ function changeGameColors() {
 	CTMZ.apple = food_colors_button.value;
 }
 
+function resetGameColors() {
+	var snake_colors_button = document.getElementById("snake-colors");
+	var food_colors_button = document.getElementById("food-colors");
+	snake_colors_button.selectedIndex = 0;
+	food_colors_button.selectedIndex = 0;
+}
+
 function changeScene() {
 	var element = document.getElementsByClassName("body-container");
 	console.log(element);
@@ -27,18 +34,36 @@ function changeScene() {
 	var items = document.getElementsByClassName("flexitem");
 	console.log("items", items);
 	for (i = 0; i < items.length; i++) {
-		items[i].classList.toggle("dark-mode");
+		items[i].classList.toggle("item-dark-mode");
 	}
 
-	// game customizations
+	var toggleDarkMode = document.querySelector("#scene-button");
+	var gameToggleDarkMode = document.querySelector("#game-window");
+	gameToggleDarkMode.classList.toggle("game-dark-mode");
+
+	var toggleModalDarkMode = document.querySelector("#modal-background");
+	toggleModalDarkMode.classList.toggle("modal-background-dark-mode");
+	var modalstuff = document.getElementsByClassName("modal-dialogue")[0]
+	modalstuff.classList.toggle("modal-dark-mode");
+
 	if (!dark_mode_toggle) {
-		CTMZ.background = "black";
-		CTMZ.border = "white";
+		CTMZ.background = "black";	// game canvas background
+		CTMZ.border = "white";		// border
 		dark_mode_toggle = 1;
+		toggleDarkMode.textContent = "Light mode";
 	} else {
 		CTMZ.background = "white";
 		CTMZ.border = "black";
-		dark_mode_toggle = 0;		
+		dark_mode_toggle = 0;
+		toggleDarkMode.textContent = "Dark mode";
+	}
+}
+
+function confirmDefaults() {
+	let ans = confirm("Reset to default options?");
+	if (ans) {
+		resetGameColors();
+		changeGameColors();
 	}
 }
 
@@ -50,6 +75,22 @@ function closeUserModal() {
 	userModal.classList.add("hidden");	
 	resetGame();	// default game values (game.js)
 	mainLoop();		// restart
+}
+
+function addUser(name, score) {
+
+}
+
+function parseUsers(name, score) {
+	let scores = document.getElementsByClassName("score");
+	console.log(scores);
+	let curr;
+	let prev;
+	for (i = 0; i < scores.length; i++) {
+		if (scores[i].innerText == score) {
+			console.log("found!");
+		}
+	}
 }
 
 function handleUserModalAccept() {
@@ -68,6 +109,8 @@ function handleUserModalAccept() {
 		score: user_score
 	}
 
+	addUser(user.name, user.score);
+
 	console.log("== new user entry: ", user);
 	console.log("== req: ", req);
 	req.setRequestHeader("Content-Type", "application/json");
@@ -77,23 +120,7 @@ function handleUserModalAccept() {
 
 	// close modal and restart the window
 	closeUserModal();
-	window.location.reload();
-	siteRedirect();
-}
-
-function newUserRequest() {
-	var user_name = document.getElementById("name-input-textfield").value.trim();
-
-}
-
-function siteRedirect() {
-	var req = new XMLHttpRequest();
-	var reqURL = "/redirect";
-	console.log("== reqURL: " + reqURL);
-	req.open("GET", reqURL);
-	req.setRequestHeader("status", 304);
-	console.log(req);
-	req.send();
+	parseUsers("yeet", 50);
 }
 
 function PHScore() {
@@ -124,6 +151,10 @@ window.addEventListener("DOMContentLoaded", function() {
 	var toggleDarkMode = document.querySelector("#scene-button");
 	if (toggleDarkMode) {
 		toggleDarkMode.addEventListener("click", changeScene);
+	}
+	var resetDefaults = document.querySelector("#defaults-button");
+	if (resetDefaults) {
+		resetDefaults.addEventListener("click", confirmDefaults);
 	}
 	var snake_color_button = document.querySelector("#snake-colors");
 	var food_color_button = document.querySelector("#food-colors");

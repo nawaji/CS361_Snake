@@ -123,9 +123,9 @@ function checkEat() {
 function clearCanvas() {
 	ctx.fillStyle = CTMZ.background;
 	ctx.fillRect(0, 0, c.width, c.height);
-	ctx.rect(0, 0, 400, 400);
-	ctx.strokeStyle = CTMZ.border;
-	ctx.stroke();
+//	ctx.rect(0, 0, 400, 400);
+//	ctx.strokeStyle = CTMZ.border;
+//	ctx.stroke();
 }
 
 function snake_direction(key) {
@@ -191,11 +191,17 @@ function mainLoop() {
 		clearCanvas();
 		drawFood();
 		drawSnake();
+	
+		if (start == 0) {
+			console.log("yuh");
+			ctx.fillStyle = CTMZ.border;
+			ctx.font = "25px Arial";
+			ctx.textAlign = "center";
+			ctx.fillText("Use arrow keys to move!", 200, 100);
+		}
 
-//		if (start != 0) {
-//			score++;
-//		}
 		updateScoreHTML();
+
 		queue = 0;
 		mainLoop();
 	}, game_speed);

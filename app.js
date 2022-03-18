@@ -30,10 +30,6 @@ router.get("/", function(req, res, next) {
 	res.status(200).render("index", { user_data });
 });
 
-router.get("/redirect", function(req, res, next) {
-	res.status(304).redirect("/");
-})
-
 // handle the incoming user entry for the leaderboards
 router.post("/add-user-rank", function(req, res, next) {
 	let data = req.body;
@@ -48,7 +44,7 @@ router.post("/add-user-rank", function(req, res, next) {
 	}
 	sortLeaderboards();
 	res.status(200);
-	res.send("it worked!");
+	res.send(user_data);
 });
 
 function sortLeaderboards() {
@@ -71,14 +67,6 @@ function updateLeaderboards(new_name, new_score) {
 	}
 	return true;
 }
-
-
-// update the rankings based on user input in the rankings
-// however, this may be obsolete through the use of javascript
-// interactions within the main page.
-router.post("/update-visible-ranks", function(req, res) {
-
-})
 
 app.use("/", router);
 
