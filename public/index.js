@@ -1,8 +1,9 @@
-var PH_score;
+var internal_score;
 var dark_mode_toggle = 0;
+var key_toggle = 0;
 
 function openUserModal() {
-	PHScore();
+	internalScore();
 	var modalBackground = document.getElementById("modal-background");
 	var userModal = document.getElementById("add-user-modal");
 
@@ -31,20 +32,49 @@ function changeScene() {
 	var doc_body = document.body;
 	doc_body.classList.toggle("dark-mode");
 
+	// body items dark mode
 	var items = document.getElementsByClassName("flexitem");
 	console.log("items", items);
 	for (i = 0; i < items.length; i++) {
 		items[i].classList.toggle("item-dark-mode");
 	}
 
-	var toggleDarkMode = document.querySelector("#scene-button");
-	var gameToggleDarkMode = document.querySelector("#game-window");
-	gameToggleDarkMode.classList.toggle("game-dark-mode");
+	var search_input = document.getElementById("scores-search-input");
+	search_input.classList.toggle("modal-input-dark-mode");
 
+	var scene_button = document.getElementById("scene-button");
+	var controls_button = document.getElementById("controls-button");
+	var defaults_button = document.getElementById("defaults-button");
+
+	scene_button.classList.toggle("buttons-dark-mode");
+	controls_button.classList.toggle("buttons-dark-mode");
+	defaults_button.classList.toggle("buttons-dark-mode");
+
+	changeModalScene();
+	changeGameScene();
+}
+
+function changeModalScene() {
+	// modal dark mode
 	var toggleModalDarkMode = document.querySelector("#modal-background");
 	toggleModalDarkMode.classList.toggle("modal-background-dark-mode");
-	var modalstuff = document.getElementsByClassName("modal-dialogue")[0]
+	var modalstuff = document.getElementsByClassName("modal-dialogue")[0];
 	modalstuff.classList.toggle("modal-dark-mode");
+
+	var input_bar = document.getElementById("name-input-textfield");
+	input_bar.classList.toggle("modal-input-dark-mode");
+
+	var cancel_button = document.getElementsByClassName("cancel-add-user")[0];
+	var accept_button = document.getElementsByClassName("accept-add-user")[0];
+
+	cancel_button.classList.toggle("buttons-dark-mode");
+	accept_button.classList.toggle("accept-button-dark-mode");
+}
+
+function changeGameScene() {
+	var toggleDarkMode = document.querySelector("#scene-button");
+	var gameToggleDarkMode = document.querySelector("#game-window");
+	gameToggleDarkMode.classList.toggle("game-dark-mode");	
 
 	if (!dark_mode_toggle) {
 		CTMZ.background = "black";	// game canvas background
@@ -74,33 +104,40 @@ function closeUserModal() {
 	modalBackground.classList.add("hidden");
 	userModal.classList.add("hidden");	
 	resetGame();	// default game values (game.js)
-	mainLoop();		// restart
+	mainLoop();
 }
 
 function addUser(name, score) {
+	var scores_list = document.getElementById("scores");
 
-}
+	var new_list_entry = document.createElement("li");
+	var new_name = document.createElement("span");
+	new_name.classList.add("name")
+	new_name.textContent = name;
 
-function parseUsers(name, score) {
-	let scores = document.getElementsByClassName("score");
-	console.log(scores);
-	let curr;
-	let prev;
-	for (i = 0; i < scores.length; i++) {
-		if (scores[i].innerText == score) {
-			console.log("found!");
-		}
-	}
+	var new_score = document.createElement("span");
+	new_score.classList.add("score")
+	new_score.textContent = score;
+
+	var spacer = document.createElement("text");
+	spacer.textContent = " : "
+
+	// this will show up as: name : score at
+	// the end of the list
+	new_list_entry.appendChild(new_name);
+	new_list_entry.appendChild(spacer);
+	new_list_entry.appendChild(new_score);
+
+	scores_list.appendChild(new_list_entry);	
 }
 
 function handleUserModalAccept() {
 	var user_name = document.getElementById("name-input-textfield").value.trim();
-	var user_score = PH_score;
+	var user_score = internal_score;
 
 	// set up a HTTP request and the route
 	var req = new XMLHttpRequest();
 	var reqURL = "/add-user-rank";
-	console.log("== reqURL: " + reqURL);
 	req.open("POST", reqURL);
 
 	// object with user name and score to be sent to server
@@ -109,31 +146,52 @@ function handleUserModalAccept() {
 		score: user_score
 	}
 
-	addUser(user.name, user.score);
-
-	console.log("== new user entry: ", user);
-	console.log("== req: ", req);
 	req.setRequestHeader("Content-Type", "application/json");
 	var reqBody = JSON.stringify(user);
 
 	req.send(reqBody);
 
 	// close modal and restart the window
+	addUser(user.name, user.score);
 	closeUserModal();
-	parseUsers("yeet", 50);
 }
 
-function PHScore() {
+// update scoreboard
+function internalScore() {
 	var user_score = document.getElementById("user-score");
-	user_score.textContent = "You scored: " + PH_score;
+	user_score.textContent = "You scored: " + internal_score;
 
-	return PH_score;
+	return internal_score;
 }
 
 function randScore() {
 	return Math.floor(Math.random() * (200 - 0));
 }
 
+function swapKeys() {
+	var switchControls = document.querySelector("#controls-button");
+
+	if (!key_toggle) {
+		switchControls.textContent = "Change to Arrow controls";
+		key_toggle = 1;
+		CTMZ.going_left = 65;
+		CTMZ.going_up = 87;
+		CTMZ.going_right = 68;
+		CTMZ.going_down = 83;
+
+	} else {
+		switchControls.textContent = "Change to WASD controls"
+		key_toggle = 0;
+		CTMZ.going_left = 37;
+		CTMZ.going_up = 38;
+		CTMZ.going_right = 39;
+		CTMZ.going_down = 40;
+	}
+}
+
+// Add event listeners when content is done loading.
+// While this looks like a lot for one function, theres
+// no other way to handle this so its fine.
 window.addEventListener("DOMContentLoaded", function() {
 	var gameOverButton = document.getElementById("game-over");
 	if (gameOverButton) {
@@ -144,22 +202,31 @@ window.addEventListener("DOMContentLoaded", function() {
 	if (cancelAddUser) {
 		cancelAddUser.addEventListener("click", closeUserModal);
 	}
+
 	var acceptAddUser = document.querySelector("#add-user-modal .accept-add-user");
 	if (acceptAddUser) {
 		acceptAddUser.addEventListener("click", handleUserModalAccept);
 	}
+
 	var toggleDarkMode = document.querySelector("#scene-button");
 	if (toggleDarkMode) {
 		toggleDarkMode.addEventListener("click", changeScene);
 	}
+
 	var resetDefaults = document.querySelector("#defaults-button");
 	if (resetDefaults) {
 		resetDefaults.addEventListener("click", confirmDefaults);
 	}
+
 	var snake_color_button = document.querySelector("#snake-colors");
 	var food_color_button = document.querySelector("#food-colors");
 	if (snake_color_button && food_color_button) {
 		snake_color_button.addEventListener("change", changeGameColors);
 		food_color_button.addEventListener("change", changeGameColors);
+	}
+
+	var switchControls = document.querySelector("#controls-button");
+	if (switchControls) {
+		switchControls.addEventListener("click", swapKeys);
 	}
 });

@@ -1,86 +1,10 @@
 [
   {
-    "name": "AAAAA",
-    "score": 50
-  },
-  {
-    "name": "sf",
-    "score": 50
-  },
-  {
-    "name": "",
-    "score": 40
-  },
-  {
     "name": "Bob",
-    "score": 20
+    "score": 60
   },
   {
     "name": "John",
-    "score": 20
-  },
-  {
-    "name": "E",
-    "score": 20
-  },
-  {
-    "name": "Beaver",
-    "score": 10
-  },
-  {
-    "name": "ALSO RIP",
-    "score": 10
-  },
-  {
-    "name": "yup!",
-    "score": 10
-  },
-  {
-    "name": "yuh",
-    "score": 10
-  },
-  {
-    "name": "amogus",
-    "score": 10
-  },
-  {
-    "name": "YEET",
-    "score": 10
-  },
-  {
-    "name": "?",
-    "score": 10
-  },
-  {
-    "name": "YUHYEET",
-    "score": 10
-  },
-  {
-    "name": "sadsa",
-    "score": 10
-  },
-  {
-    "name": "RIP",
-    "score": 0
-  },
-  {
-    "name": "test",
-    "score": 0
-  },
-  {
-    "name": "asdf",
-    "score": 0
-  },
-  {
-    "name": "YEET2",
-    "score": 0
-  },
-  {
-    "name": "asd",
-    "score": 0
-  },
-  {
-    "name": "sdfg",
-    "score": 0
+    "score": 30
   }
 ]

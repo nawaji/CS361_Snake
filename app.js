@@ -17,8 +17,6 @@ var router = express.Router();
 
 const { engine } = require('express-handlebars');
 var exphbs = require('express-handlebars');  //Import express-handlbars
-//const { fstat } = require('fs');
-//const { resourceUsage } = require('process');
 app.engine("hbs", engine({ defaultLayout: "main", extname: ".hbs" }));
 app.set("view engine", "hbs");
 

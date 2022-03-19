@@ -5,7 +5,10 @@ var ctx = c.getContext("2d");
 c.tabIndex = 1;
 
 // add a listener for keypress
-document.addEventListener("keydown", snake_direction);
+window.addEventListener("DOMContentLoaded", function() {
+	c.addEventListener("keydown", snake_direction);
+
+});
 
 var score = 0;
 var start = 0;			// avoid incrementing score until user presses a key		
@@ -13,12 +16,19 @@ var queue = 0;			// avoid multiple direction changes within a single step
 const move_speed = 20;	// how far the snake moves in a step
 var game_speed = 150; 	// miliseconds between steps
 
-// customization settings (colors)
+// customization settings (colors, key controls)
 var CTMZ = {
 	background: "white",
 	border: "black",
 	snake: "green",
-	apple: "red"
+	apple: "red",
+
+	// 37 - left arrow, 38 - up, 39 - right, 40 - down
+	// 65 - a, 87 - w, 68 - right, 83 - down
+	going_left: 37,
+	going_up: 38,
+	going_right: 39,
+	going_down: 40
 }
 
 var snake = {
@@ -58,12 +68,7 @@ function newApple() {
 	while(valid == false) {
 		apple.x = randInt(0, 20) * 20;
 		apple.y = randInt(0, 20) * 20;		
-/*		snake.body.forEach(part => {
-			if (part.x != apple.x && part.y != apple.y) {
-				valid = true;
-			}
-		});
-*/
+
 		for (i = 0; i < body.length; i++) {
 			if (body[i].x == apple.x && body[i].y == apple.y) {
 				valid = false;
@@ -120,19 +125,43 @@ function checkEat() {
 	}
 }
 
+function checkStart() {
+	if (start == 0) {
+		ctx.fillStyle = CTMZ.border;
+		ctx.font = "25px Arial";
+		ctx.textAlign = "center";
+		if (CTMZ.going_left == 37) {
+			ctx.fillText("Use arrow keys to move!", 200, 100);
+		} else {
+			ctx.fillText("Use WASD keys to move!", 200, 100);
+		}
+	}
+}
+
+function checkBounds() {
+	let bounds = checkFail();
+	if (bounds > 0) {
+		console.log("out of bounds!");
+		internal_score = score;
+		openUserModal();
+		return true;
+	}
+	return false;
+}
+
+// clear canvas for next frame
 function clearCanvas() {
 	ctx.fillStyle = CTMZ.background;
 	ctx.fillRect(0, 0, c.width, c.height);
-//	ctx.rect(0, 0, 400, 400);
-//	ctx.strokeStyle = CTMZ.border;
-//	ctx.stroke();
 }
 
 function snake_direction(key) {
 	var key_press = key.keyCode;
-	// 37 - left, 38 - up, 39 - right, 40 - down
 
-	if (key_press > 36 && key_press < 41) {
+	// I don't think there's a better way to code for the specific key presses
+	// so it will be left like this.
+	if (key_press == CTMZ.going_left || key_press == CTMZ.going_up 
+	|| key_press == CTMZ.going_right || key_press == CTMZ.going_down) {
 		start = 1;
 	}
 
@@ -140,23 +169,24 @@ function snake_direction(key) {
 		return;
 	}
 
-	if (key_press == 37 && snake.dx != move_speed) {
+	if (key_press == CTMZ.going_left && snake.dx != move_speed) {
 		snake.dx = -move_speed;
 		snake.dy = 0;
 
-	} else if (key_press == 38 && snake.dy != move_speed) {
+	} else if (key_press == CTMZ.going_up && snake.dy != move_speed) {
 		snake.dx = 0;
 		snake.dy = -move_speed;
 
-	} else if (key_press == 39 && snake.dx != -move_speed) {
+	} else if (key_press == CTMZ.going_right && snake.dx != -move_speed) {
 		snake.dx = move_speed;
 		snake.dy = 0;
 
-	} else if (key_press == 40 && snake.dy != -move_speed) {
+	} else if (key_press == CTMZ.going_down && snake.dy != -move_speed) {
 		snake.dx = 0;
 		snake.dy = move_speed;
 	}
 	queue = 1;
+	key.preventDefault();
 }
 
 function updateScoreHTML() {
@@ -179,26 +209,15 @@ function mainLoop() {
 
 	setTimeout(function onTick() {
 		moveSnake();
-		let bounds = checkFail();
-		if (bounds > 0) {
-			console.log("out of bounds!");
-			PH_score = score;
-			openUserModal();
+		if (checkBounds()) {
 			return;
 		}
-
 		checkEat();
+
 		clearCanvas();
+		checkStart();
 		drawFood();
 		drawSnake();
-	
-		if (start == 0) {
-			console.log("yuh");
-			ctx.fillStyle = CTMZ.border;
-			ctx.font = "25px Arial";
-			ctx.textAlign = "center";
-			ctx.fillText("Use arrow keys to move!", 200, 100);
-		}
 
 		updateScoreHTML();
 
